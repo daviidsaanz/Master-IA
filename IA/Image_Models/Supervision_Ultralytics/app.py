@@ -1,4 +1,3 @@
-# min 1:04.00h -> https://www.youtube.com/watch?v=RvVLqXdhdVQ
 import cv2
 import supervision as sv
 import argparse
