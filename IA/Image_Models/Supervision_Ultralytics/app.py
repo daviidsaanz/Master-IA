@@ -21,6 +21,32 @@ POLYGON = np.array([
 ], dtype=np.int32)
 CLASSES = [2,3]
 
+LINE_1_START = sv.Point(275,38)
+LINE_1_END = sv.Point(150,38)
+
+LINE_2_START = sv.Point(556,329)
+LINE_2_END = sv.Point(10,329)
+
+LINE_3_START = sv.Point(582,161)
+LINE_3_END = sv.Point(629,206)
+
+
+LINE_ZONE_1 = sv.LineZone(
+    start=LINE_1_START,
+    end=LINE_1_END,
+    triggering_anchors=(sv.Position.BOTTOM_CENTER,)
+)
+LINE_ZONE_2 = sv.LineZone(
+    start=LINE_2_START,
+    end=LINE_2_END,
+    triggering_anchors=(sv.Position.BOTTOM_CENTER,)
+)
+LINE_ZONE_3 = sv.LineZone(
+    start=LINE_3_START,
+    end=LINE_3_END,
+    triggering_anchors=(sv.Position.BOTTOM_CENTER,)
+)
+
 model = YOLO("yolo11n.pt")
 tracker = sv.ByteTrack(minimum_consecutive_frames=3)
 tracker.reset()
@@ -29,6 +55,7 @@ polygon_zone = sv.PolygonZone(polygon=POLYGON, triggering_anchors=(sv.Position.C
 box_annotator = sv.BoxAnnotator()
 label_annotator = sv.LabelAnnotator(text_color=sv.Color.BLACK)
 trace_annotator = sv.TraceAnnotator(trace_length=15)
+line_zone_annotator = sv.LineZoneAnnotator()
 
 def main(video_file_path):
     frame_generator = sv.get_video_frames_generator(source_path=video_file_path)
@@ -44,6 +71,11 @@ def main(video_file_path):
             f"#{tracker_id}"
             for tracker_id in detections.tracker_id
         ]
+        
+        LINE_ZONE_1.trigger(detections=detections)
+        LINE_ZONE_2.trigger(detections=detections)
+        LINE_ZONE_3.trigger(detections=detections)
+
         
         annotated_frame = frame.copy()
         annotated_frame = sv.draw_polygon(
@@ -64,6 +96,15 @@ def main(video_file_path):
         annotated_frame = trace_annotator.annotate(
             scene=annotated_frame,
             detections=detections
+        )
+        annotated_frame = line_zone_annotator.annotate(
+            annotated_frame, line_counter=LINE_ZONE_1,
+        )
+        annotated_frame = line_zone_annotator.annotate(
+            annotated_frame, line_counter=LINE_ZONE_2,
+        )
+        annotated_frame = line_zone_annotator.annotate(
+            annotated_frame, line_counter=LINE_ZONE_3,
         )
         
         cv2.imshow("Processed video", annotated_frame)
