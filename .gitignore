@@ -28,12 +28,30 @@ datasets/
 *.h5
 *.pkl
 *.joblib
+models/
+**/models/
+modelos/
+**/modelos/
 
 # ---------------------------
 # ARCHIVOS PYTHON COMPILADOS
 # ---------------------------
 __pycache__/
 *.pyc
+
+# ---------------------------
+# CLAUDE
+# ---------------------------
+CLAUDE.md
+**/CLAUDE.md
+.claude/
+**/.claude/
+
+# ---------------------------
+# JUPYTER CHECKPOINTS
+# ---------------------------
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
 
 # ---------------------------
 # OTROS
